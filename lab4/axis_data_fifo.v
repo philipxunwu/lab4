@@ -107,7 +107,7 @@ always @* begin
     //TODO: complete the write logic; hint should we always execute the the following signal assignments? or is there a condition that we should check?
     
     // input data valid
-    if (wr_axis_vld && ~full) begin
+    if (wr_axis_vld && ~full && !wr_rst_sync3_reg) begin
         // not full, perform write
         write = 1'b1;
         wr_ptr_next = wr_ptr_reg + 1;
@@ -133,22 +133,22 @@ end
 
 // pointer synchronization
 always @(posedge wr_aclk) begin
-    if (wr_rst_sync3_reg) begin
+    if (!wr_rstn) begin
         rd_ptr_gray_sync1_reg <= {ADDR_WIDTH+1{1'b0}};
         rd_ptr_gray_sync2_reg <= {ADDR_WIDTH+1{1'b0}};
     end else begin
         rd_ptr_gray_sync1_reg <= rd_ptr_gray_reg;
-        rd_ptr_gray_sync2_reg <= rd_ptr_gray_sync1_reg;
+        rd_ptr_gray_sync2_reg <= rd_ptr_gray_reg;
     end
 end
 
 always @(posedge rd_aclk) begin
-    if (rd_rst_sync3_reg) begin
+    if (!rd_rstn) begin
         wr_ptr_gray_sync1_reg <= {ADDR_WIDTH+1{1'b0}};
         wr_ptr_gray_sync2_reg <= {ADDR_WIDTH+1{1'b0}};
     end else begin
         wr_ptr_gray_sync1_reg <= wr_ptr_gray_reg;
-        wr_ptr_gray_sync2_reg <= wr_ptr_gray_sync1_reg;
+        wr_ptr_gray_sync2_reg <= wr_ptr_gray_reg;
     end
 end
 
