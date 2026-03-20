@@ -121,9 +121,9 @@ always @(posedge wr_aclk) begin
         wr_ptr_gray_reg <= {ADDR_WIDTH+1{1'b0}};
         wr_addr_reg <= {ADDR_WIDTH+1{1'b0}};
     end else begin
+        wr_addr_reg <= wr_ptr_reg;
         wr_ptr_reg <= wr_ptr_next;
         wr_ptr_gray_reg <= wr_ptr_gray_next;
-        wr_addr_reg <= wr_ptr_reg;
     end
 
     if (write) begin
@@ -183,9 +183,9 @@ always @(posedge rd_aclk) begin
         rd_addr_reg <= {ADDR_WIDTH+1{1'b0}};
         mem_read_data_valid_reg <= 1'b0;
     end else begin
+        rd_addr_reg <= rd_ptr_reg;
         rd_ptr_reg <= rd_ptr_next;
         rd_ptr_gray_reg <= rd_ptr_gray_next;
-        rd_addr_reg <= rd_ptr_reg;
         mem_read_data_valid_reg <= mem_read_data_valid_next;
     end
 
